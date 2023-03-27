@@ -48,3 +48,17 @@ WITH T1 AS
  FROM T2 GROUP BY sport)
  SELECT * FROM T3
  JOIN T1 ON T1.total_number_of_games = T3.no_of_games;
+
+
+-- QUE2: FETCH THE TOP 5 ATHLETES WHO HAVE WON THE MOST GOLD MEDALS.
+
+WITH T1 AS 
+(SELECT name, COUNT(1) AS total_medals
+FROM OLYMPICS_HISTORY WHERE medal = 'Gold'
+GROUP BY name 
+ORDER BY COUNT(1) DESC),
+T2 AS 
+(SELECT * , DENSE_RANK () OVER (ORDER BY total_medals DESC )AS rnk_no
+FROM T1)
+SELECT * FROM T2
+WHERE rnk_no <= 5 ;
