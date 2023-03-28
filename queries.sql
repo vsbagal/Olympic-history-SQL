@@ -65,8 +65,22 @@ WHERE rnk_no <= 5 ;
 
 -- QUE3: LIST DOWN TOTAL GOLD, SILVER AND BRONZE MEDALS WON BY EACH COUNTRY.
 
-SELECT NR.REGION AS COUNTRY, MEDAL, COUNT(1) AS TOTAL_MEDALS FROM OLYMPICS_HISTORY OH JOIN 
-OLYMPICS_HISTORY_NOC_REGIONS NR ON NR.NOC = OH.NOC
-WHERE MEDAL <> 'NA'
-GROUP BY NR.REGION, MEDAL
-ORDER BY NR.REGION, MEDAL;
+SELECT country
+    	, coalesce(gold, 0) as gold
+    	, coalesce(silver, 0) as silver
+    	, coalesce(bronze, 0) as bronze
+    FROM CROSSTAB('SELECT nr.region as country
+    			, medal
+    			, count(1) as total_medals
+    			FROM olympics_history oh
+    			JOIN olympics_history_noc_regions nr ON nr.noc = oh.noc
+    			where medal <> ''NA''
+    			GROUP BY nr.region,medal
+    			order BY nr.region,medal',
+            'values (''Bronze''), (''Gold''), (''Silver'')')
+    AS FINAL_RESULT(country varchar, bronze bigint, gold bigint, silver bigint)
+    order by gold desc, silver desc, bronze desc;
+
+
+
+
