@@ -100,15 +100,4 @@ SELECT country
     				  order BY games,medal',
                   'values (''Bronze''), (''Gold''), (''Silver'')')
     			   AS FINAL_RESULT(games text, bronze bigint, gold bigint, silver bigint))
-    select distinct games
-    	, concat(first_value(country) over(partition by games order by gold desc)
-    			, ' - '
-    			, first_value(gold) over(partition by games order by gold desc)) as Max_Gold
-    	, concat(first_value(country) over(partition by games order by silver desc)
-    			, ' - '
-    			, first_value(silver) over(partition by games order by silver desc)) as Max_Silver
-    	, concat(first_value(country) over(partition by games order by bronze desc)
-    			, ' - '
-    			, first_value(bronze) over(partition by games order by bronze desc)) as Max_Bronze
-    from temp
-    order by games;
+ 
