@@ -31,8 +31,8 @@ CREATE TABLE OLYMPICS_HISTORY_NOC_REGIONS
 );
 
 select * from OLYMPICS_HISTORY;
-select * from OLYMPICS_HISTORY_NOC_REGIONS;
-
+select * from OLYMPICS_HISTORY
+_NOC_REGIONS;
 -- QUE1: FIND TOTAL NUMBER OF SUMMER OLYMPIC GAMES.
 -- FIND FOR EACH SPORT, HOW MANY GAMES WERE THEY PLAYED IN.
 
@@ -84,20 +84,5 @@ SELECT country
 
 -- QUE4: IDENTIFY WHICH COUNTRY WON THE MOST GOLD, MOST SILVER AND MOST BRONZE MEDALS IN EACH OLYMPIC GAMES.
 
-    WITH temp as
-    	(SELECT substring(games, 1, position(' - ' in games) - 1) as games
-    	 	, substring(games, position(' - ' in games) + 3) as country
-            , coalesce(gold, 0) as gold
-            , coalesce(silver, 0) as silver
-            , coalesce(bronze, 0) as bronze
-    	FROM CROSSTAB('SELECT concat(games, '' - '', nr.region) as games
-    					, medal
-    				  	, count(1) as total_medals
-    				  FROM olympics_history oh
-    				  JOIN olympics_history_noc_regions nr ON nr.noc = oh.noc
-    				  where medal <> ''NA''
-    				  GROUP BY games,nr.region,medal
-    				  order BY games,medal',
-                  'values (''Bronze''), (''Gold''), (''Silver'')')
-    			   AS FINAL_RESULT(games text, bronze bigint, gold bigint, silver bigint))
+   
  
